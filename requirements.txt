@@ -36,7 +36,6 @@ haralyzer==2.0.0
 idna==3.3
 imageio==2.13.5
 importlib-metadata==4.10.0
-intel-openmp==2022.0.0
 ipykernel==5.3.4
 ipython==7.17.0
 ipython-genutils==0.2.0
