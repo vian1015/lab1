@@ -18,12 +18,10 @@ def show_wishlist(request):
     data_wishlist_item = ItemWishlist.objects.all()
     context = {
         'list_item': data_wishlist_item,
-        'name': 'Jovian',
         'last_login': request.COOKIES['last_login'],
     }
 
     return render(request, "wishlist.html", context)
-
 
 def show_xml(request):
     data = ItemWishlist.objects.all()
