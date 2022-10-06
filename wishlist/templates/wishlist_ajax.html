@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h5>Name: </h5>
+<p>{{name}}</p>
+
+<div class="tbody">
+    <table table class="table table-striped">
+        <tr>
+            <th>Item Name</th>
+            <th>Item Price</th>
+            <th>Description</th>
+        </tr>
+    </table>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        const url="http://127.0.0.1:8000/wishlist/json/"
+        $.get(url, (data) => {
+            data.forEach((item) => {
+                var item_name = item.fields.item_name;
+                var item_price = item.fields.item_price;
+                var item_description = item.fields.description;
+                var html = "<tr><td>" + item_name +
+                            "</td><td>" + item_price +
+                            "</td><td>" + item_description + "</td>";
+                $("tbody").append(html);
+            })
+        })
+    })
+</script>
+
+
+
+
+<h5>Last Login: {{ last_login }}</h5>
+
+
+
+{% endblock content %}
