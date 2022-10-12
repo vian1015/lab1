@@ -1,44 +1,54 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+  <h1>Wishlist</h1>
+  <form id="form" onsubmit="return false;">
+    {% csrf_token %}
+    <label>Item Name</label>
+    <input type="text" name="item_name"></input>
+    <label>Item Price</label>
+    <input type="number" name="item_price"></input>
+    <label>Description</label>
+    <input type="text" name="description"></input>
+    <button id="button" type="submit" value="Submit" onclick="addWishlist()">Submit</button>
+  </form>
 
-<h5>Name: </h5>
-<p>{{name}}</p>
+  <table id="table"></table>
 
-<div class="tbody">
-    <table table class="table table-striped">
-        <tr>
-            <th>Item Name</th>
-            <th>Item Price</th>
-            <th>Description</th>
-        </tr>
-    </table>
-</div>
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-    $(document).ready(function() {
-        const url="http://127.0.0.1:8000/wishlist/json/"
-        $.get(url, (data) => {
-            data.forEach((item) => {
-                var item_name = item.fields.item_name;
-                var item_price = item.fields.item_price;
-                var item_description = item.fields.description;
-                var html = "<tr><td>" + item_name +
-                            "</td><td>" + item_price +
-                            "</td><td>" + item_description + "</td>";
-                $("tbody").append(html);
-            })
+  async function getWishlist() {
+    return fetch("{% url 'wishlist:show_json' %}").then((res) => res.json())
+  }
+
+  async function refreshWishlist() {
+        document.getElementById("table").innerHTML = ""
+        const wishlist = await getWishlist()
+        let htmlString = `<tr>
+          <th>Item Name</th>
+          <th>Item Price</th>
+          <th>Description</th>
+        </tr>`
+        wishlist.forEach((item) => {
+          htmlString += `\n<tr>
+          <th>${item.fields.item_name}</th>
+          <th>${item.fields.item_price}</th>
+          <th>${item.fields.description}</th>
+        </tr>` 
         })
-    })
+        
+        document.getElementById("table").innerHTML = htmlString
+  }
+
+  function addWishlist() {
+    fetch("{% url 'wishlist:add_wishlist_item' %}", {
+          method: "POST",
+          body: new FormData(document.querySelector('#form'))
+      }).then(refreshWishlist)
+    return false
+  }
+
+  refreshWishlist()
 </script>
-
-
-
-
 <h5>Last Login: {{ last_login }}</h5>
-
-
-
 {% endblock content %}

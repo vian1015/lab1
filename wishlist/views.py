@@ -31,6 +31,19 @@ def show_wishlist_ajax(request):
 
     return render(request, "wishlist_ajax.html", context)
 
+def add_wishlist_item(request):
+    if request.method == 'POST':
+        item_name = request.POST.get("item_name")
+        item_price = request.POST.get("item_price")
+        description = request.POST.get("description")
+
+        new_barang = ItemWishlist(item_name=item_name, item_price=item_price, description=description)
+        new_barang.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+
 def show_xml(request):
     data = ItemWishlist.objects.all()
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
